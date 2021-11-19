@@ -1,0 +1,9 @@
+.reactions {
+    position: relative;
+
+    &-selectors {
+        position: absolute;
+        bottom: 100%;
+        margin-bottom: 10px;
+    }
+}
