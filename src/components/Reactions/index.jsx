@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import CounterGroups from './CounterGroups';
+import Selectors from './Selectors';
 
-import Tooltip from '../Tooltip';
 import './style.scss';
 
 function Reactions({
@@ -15,46 +16,15 @@ function Reactions({
         <div className="reactions">
             {/* Reactions selector */}
             {showSelector ? (
-                <div className="reactions-selectors">
-                    {reactions.map((reaction) => {
-                        const { emoji, name } = reaction;
-
-                        return (
-                            <Tooltip content={name} key={name}>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setShowSelector(false);
-                                        onSelect(reaction);
-                                    }}
-                                >
-                                    {emoji}
-                                </button>
-                            </Tooltip>
-                        );
-                    })}
-                </div>
+                <Selectors
+                    reactions={reactions}
+                    onSelect={onSelect}
+                    setShowSelector={setShowSelector}
+                />
             ) : null }
 
             {/* Reaction counter groups */}
-            <div className="reactions-emoji-groups">
-                { reactionCounts.map((reactionCount) => {
-                    const { emoji, count, active } = reactionCount;
-
-                    return (
-                        <button
-                            type="button"
-                            key={emoji}
-                            onClick={() => onSelect(reactionCount)}
-                            className={active ? 'active' : ''}
-                        >
-                            { emoji }
-                            ·
-                            { count }
-                        </button>
-                    );
-                }) }
-            </div>
+            <CounterGroups reactionCounts={reactionCounts} onSelect={onSelect} />
 
             <button onClick={() => setShowSelector(true)} type="button">
                 <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
