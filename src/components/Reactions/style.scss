@@ -6,4 +6,11 @@
         bottom: 100%;
         margin-bottom: 10px;
     }
+
+    &-emoji-groups {
+        .active {
+            color: #fff;
+            background-color: #0084ff;
+        }
+    }
 }
