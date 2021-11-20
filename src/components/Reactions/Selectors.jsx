@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import Tooltip from '../Tooltip';
+import Tooltip from './Tooltip';
 
 function Selectors({ reactions, onSelect, setShowSelector }) {
     return (
