@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Content from './Content';
 import { getReactionCounts } from './utils/general';
 
+import './style.scss';
+
 function App() {
     const [data, setData] = useState({ reactions: [], users: [] });
     const [reactionCounts, setReactionCounts] = useState({});
@@ -167,7 +169,7 @@ function App() {
                             {`${currentUser.first_name} ${currentUser.last_name}`}
                         </h2>
 
-                        <select onChange={(e) => setCurrentUser(data.users[e.target.value])}>
+                        <select className="round" onChange={(e) => setCurrentUser(data.users[e.target.value])}>
                             {data.users.map((user, index) => (
                                 <option key={user.id} value={index}>
                                     {`${user.id} - ${user.first_name} ${user.last_name}`}
@@ -175,14 +177,16 @@ function App() {
                             ))}
                         </select>
 
-                        {[1, 2].map((contentId) => (
-                            <Content
-                                key={contentId}
-                                reactions={data.reactions}
-                                reactionCounts={reactionCounts[contentId] || []}
-                                handleReactionClick={(reaction) => handleReactionClick(reaction, contentId)}
-                            />
-                        ))}
+                        <div className="contents">
+                            {[1, 2].map((contentId) => (
+                                <Content
+                                    key={contentId}
+                                    reactions={data.reactions}
+                                    reactionCounts={reactionCounts[contentId] || []}
+                                    handleReactionClick={(reaction) => handleReactionClick(reaction, contentId)}
+                                />
+                            ))}
+                        </div>
                     </>
                 )}
         </div>
