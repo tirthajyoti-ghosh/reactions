@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { useEffect, useState } from 'react';
 
-import Content from './components/Content';
+import Content from './Content';
 import { getReactionCounts } from './utils/general';
 
 function App() {
@@ -9,6 +9,7 @@ function App() {
     const [reactionCounts, setReactionCounts] = useState({});
     const [currentUser, setCurrentUser] = useState({});
 
+    // Get user content reactions every time current user changes
     useEffect(() => {
         const getData = async () => {
             const response = await fetch('https://artful-iudex.herokuapp.com/user_content_reactions');
@@ -38,6 +39,7 @@ function App() {
         }
     }, [currentUser]);
 
+    // Get all reactions and users on mount
     useEffect(() => {
         async function fetchData() {
             let reactions;

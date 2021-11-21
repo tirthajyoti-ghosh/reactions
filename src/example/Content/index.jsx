@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable max-len */
-import Reactions from '../Reactions';
+import Reactions from '../../components/Reactions';
 
 function Content({ reactions, reactionCounts, handleReactionClick }) {
     return (
