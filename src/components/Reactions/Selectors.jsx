@@ -6,27 +6,29 @@ function Selectors({
 }) {
     return (
         <div className="reactions-selectors">
-            <div className="emojis">
-                {showSelector && reactions.map((reaction) => {
-                    const { emoji, name } = reaction;
+            {showSelector && (
+                <div className="emojis">
+                    {reactions.map((reaction) => {
+                        const { emoji, name } = reaction;
 
-                    return (
-                        <Tooltip content={name} key={name}>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setShowSelector(false);
-                                    onSelect(reaction);
-                                }}
-                            >
-                                <span>
-                                    {emoji}
-                                </span>
-                            </button>
-                        </Tooltip>
-                    );
-                })}
-            </div>
+                        return (
+                            <Tooltip content={name} key={name}>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowSelector(false);
+                                        onSelect(reaction);
+                                    }}
+                                >
+                                    <span>
+                                        {emoji}
+                                    </span>
+                                </button>
+                            </Tooltip>
+                        );
+                    })}
+                </div>
+            )}
 
             <button className="reactions-trigger" onClick={() => setShowSelector(!showSelector)} type="button">
                 <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
