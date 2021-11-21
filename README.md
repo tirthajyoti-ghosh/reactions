@@ -22,7 +22,7 @@
     <a href="https://github.com/tirthajyoti-ghosh/reactions"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://college-metrics-frontend.netlify.app/">View Demo</a>
+    <a href="https://ghosh-reactions.netlify.app/">View Demo</a>
     ·
     <a href="https://github.com/tirthajyoti-ghosh/reactions/issues">Report Bug</a>
     ·
@@ -65,11 +65,11 @@ A reactions component similar to Facebook/LinkedIn built using React.
 * SCSS
 * ESLint
 * Stylelint
-* [Netlify](https://college-metrics-frontend.netlify.app/)
+* [Netlify](https://ghosh-reactions.netlify.app/)
 
 ## Live demo
 
-Deployed to Netlify - [live demo](https://college-metrics-frontend.netlify.app/).
+Deployed to Netlify - [live demo](https://ghosh-reactions.netlify.app/).
 
 <!-- GETTING STARTED -->
 ## Getting Started
