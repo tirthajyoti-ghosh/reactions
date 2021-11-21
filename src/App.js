@@ -1,16 +1,12 @@
 /* eslint-disable max-len */
 import { useEffect, useState } from 'react';
 
-import Reactions from './components/Reactions';
+import Content from './components/Content';
 import { getReactionCounts } from './utils/general';
 
 function App() {
-    const [data, setData] = useState({
-        reactions: [],
-        users: [],
-        userContentReactions: [],
-    });
-    const [reactionCounts, setReactionCounts] = useState([]);
+    const [data, setData] = useState({ reactions: [], users: [] });
+    const [reactionCounts, setReactionCounts] = useState({});
     const [currentUser, setCurrentUser] = useState({});
 
     useEffect(() => {
@@ -18,7 +14,22 @@ function App() {
             const response = await fetch('https://artful-iudex.herokuapp.com/user_content_reactions');
             const userContentReactions = await response.json();
 
-            const counts = getReactionCounts(userContentReactions, currentUser, data.reactions);
+            // List of contents (for now it is hard coded)
+            const contents = [1, 2];
+            // Store reaction counts by content ids
+            const counts = {};
+            // Loop through all contents
+            for (let i = 0; i < contents.length; i += 1) {
+                // Get the reactions for the current content
+                const reactionsByContent = userContentReactions.filter((userContentReaction) => (
+                    userContentReaction.content_id === contents[i]
+                ));
+                // Pass only the reactions for the current content to getReactionCounts, current user and all reactions
+                const reactionCounts = getReactionCounts(reactionsByContent, currentUser, data.reactions);
+                // Store the reaction counts by content id
+                counts[contents[i]] = reactionCounts;
+            }
+
             setReactionCounts(counts);
         };
 
@@ -55,64 +66,90 @@ function App() {
         fetchData();
     }, []);
 
-    function handleReactionClick(reaction) {
-        // Find index of selected reaction in reactionCounts
-        const index = reactionCounts.findIndex((item) => item.emoji === reaction.emoji);
+    async function saveReaction(reaction, contentId) {
+        const response = await fetch('https://artful-iudex.herokuapp.com/user_content_reactions', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: currentUser.id,
+                reaction_id: reaction.id,
+                content_id: contentId,
+            }),
+        });
+        const data = await response.json();
+
+        return data;
+    }
+
+    async function handleReactionClick(reaction, contentId) {
+        // Find index of selected reaction in reactionCounts under selected contentId
+        const index = reactionCounts[contentId].findIndex((item) => item.emoji === reaction.emoji);
 
         if (index > -1) {
-            const selectedReaction = reactionCounts[index];
+            const selectedReaction = reactionCounts[contentId][index];
 
             // If the selected reaction is already active (already been clicked by user),
             if (selectedReaction.active) {
-                // TODO
-                // TODO
-                // TODO Send DELETE /user_content_reactions/{ID} request here
-                // TODO
-                // TODO
+                // Send DELETE /user_content_reactions/{ID} request to remove the reaction
+                await fetch(`https://artful-iudex.herokuapp.com/user_content_reactions/${selectedReaction.id}`, {
+                    method: 'DELETE',
+                    mode: 'cors',
+                });
 
                 // If the selected reaction is the last one in the array, remove it
                 if (selectedReaction.count === 1) {
-                    // Remove the reaction from the list
-                    setReactionCounts(reactionCounts.filter((item) => item.emoji !== reaction.emoji));
+                    // Remove the reaction from reactionCounts under selected contentId
+                    setReactionCounts({
+                        ...reactionCounts,
+                        [contentId]: reactionCounts[contentId].filter((item) => item.emoji !== reaction.emoji),
+                    });
                 } else {
-                    // Decrement the reaction count and set active to false
-                    const newReactionCounts = [...reactionCounts];
+                    // Decrement the reaction count under selected contentId and set active to false
+                    const newReactionCounts = [...reactionCounts[contentId]];
                     newReactionCounts[index].active = false;
                     newReactionCounts[index].count -= 1;
 
-                    setReactionCounts(newReactionCounts);
+                    setReactionCounts({
+                        ...reactionCounts,
+                        [contentId]: newReactionCounts,
+                    });
                 }
             } else {
-                // TODO
-                // TODO
-                // TODO Send POST /user_content_reactions request here
-                // TODO
-                // TODO
+                // Send POST /user_content_reactions request to add new reaction
+                const { id: newReactionId } = await saveReaction(reaction, contentId);
 
-                // If the selected reaction is not active, increment the reaction count
+                // If the selected reaction is not active, increment the reaction count under selected contentId
                 // and set active to true (as it has been clicked by user)
-                const newReactionCounts = [...reactionCounts];
+                const newReactionCounts = [...reactionCounts[contentId]];
+                newReactionCounts[index].id = newReactionId;
                 newReactionCounts[index].active = true;
                 newReactionCounts[index].count += 1;
 
-                setReactionCounts(newReactionCounts);
+                setReactionCounts({
+                    ...reactionCounts,
+                    [contentId]: newReactionCounts,
+                });
             }
         } else {
-            // If the reaction does not exist, add it to the list
-            setReactionCounts([
-                ...reactionCounts,
-                {
-                    emoji: reaction.emoji,
-                    count: 1,
-                    active: true,
-                },
-            ]);
+            // Send POST /user_content_reactions request to add new reaction
+            const { id: newReactionId } = await saveReaction(reaction, contentId);
 
-            // TODO
-            // TODO
-            // TODO Send POST /user_content_reactions request here
-            // TODO
-            // TODO
+            // If the reaction under selected contentId does not exist, add it to the list
+            setReactionCounts({
+                ...reactionCounts,
+                [contentId]: [
+                    ...reactionCounts[contentId],
+                    {
+                        id: newReactionId,
+                        emoji: reaction.emoji,
+                        count: 1,
+                        active: true,
+                    },
+                ],
+            });
         }
     }
 
@@ -135,13 +172,15 @@ function App() {
                                 </option>
                             ))}
                         </select>
-                        <div style={{ width: '200px', height: '200px', backgroundColor: 'grey' }} />
 
-                        <Reactions
-                            reactions={data.reactions}
-                            reactionCounts={reactionCounts}
-                            onSelect={(reaction) => handleReactionClick(reaction)}
-                        />
+                        {[1, 2].map((contentId) => (
+                            <Content
+                                key={contentId}
+                                reactions={data.reactions}
+                                reactionCounts={reactionCounts[contentId] || []}
+                                handleReactionClick={(reaction) => handleReactionClick(reaction, contentId)}
+                            />
+                        ))}
                     </>
                 )}
         </div>
