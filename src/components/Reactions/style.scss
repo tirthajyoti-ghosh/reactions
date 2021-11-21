@@ -1,16 +1,75 @@
 .reactions {
-    position: relative;
+    display: flex;
+
+    &-trigger {
+        background: #edeef0;
+        border-radius: 50%;
+        border: 1px solid #fff;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
     &-selectors {
-        position: absolute;
-        bottom: 100%;
-        margin-bottom: 10px;
+        position: relative;
+
+        .emojis {    
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.03);
+            padding: 5px 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+
+            button {
+                background: #fff;
+                border: none;
+                border-radius: 24px;
+                cursor: pointer;
+                font-size: 15px;
+                width: 35px;
+                height: 25px;
+                position: relative;
+                
+                span {
+                    position: absolute;
+                    top: 0;
+                    left: 6px;
+                    transition: all 0.2s ease-in-out;
+                }
+
+                &:hover {
+                    span {
+                        transform: scale(2) translateY(-5px);
+                    }
+                }
+            }
+        }
     }
 
     &-emoji-groups {
+        button {
+            background: #f4f4f4;
+            border: 1px solid #fff;
+            border-radius: 50px;
+            background: #F4F4F4;
+            color: #525252;
+            cursor: pointer;
+            height: 32px;
+            margin: 0 7px 7px 0;
+            width: 54px;
+        }
         .active {
-            color: #fff;
-            background-color: #0084ff;
+            background: #edf5ff;
+            border: 1px solid #0F62FE;
         }
     }
 }

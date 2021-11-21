@@ -15,7 +15,9 @@ function CounterGroups({ reactionCounts, onSelect }) {
                         className={active ? 'active' : ''}
                     >
                         { emoji }
+                        {' '}
                         ·
+                        {' '}
                         { count }
                     </button>
                 ) : null;
