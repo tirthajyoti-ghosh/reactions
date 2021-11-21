@@ -7,7 +7,7 @@ function CounterGroups({ reactionCounts, onSelect }) {
             { reactionCounts.map((reactionCount) => {
                 const { emoji, count, active } = reactionCount;
 
-                return (
+                return count > 0 ? (
                     <button
                         type="button"
                         key={emoji}
@@ -18,7 +18,7 @@ function CounterGroups({ reactionCounts, onSelect }) {
                         ·
                         { count }
                     </button>
-                );
+                ) : null;
             }) }
         </div>
     );
